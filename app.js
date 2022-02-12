@@ -63,13 +63,38 @@ app.route("/articles")
 ///////////////////////// Requests target all Articles /////////////////////////
 app.route("/articles/:articleTitle")
 .get(function(req, res){
-  Article.findOne({title: re.params.articleTitle}, function(err, foundArticle){
+  Article.findOne({title: req.params.articleTitle}, function(err, foundArticle){
     if(foundArticle){
       res.send(foundArticle);
     }else{
       res.send("No articles matching that title were found!");
     }
   })
+})
+
+.patch(function(req, res){
+  Article.update(
+    {title: req.params.articleTitle},
+    {$set: req.body},
+    function(err) {
+      if (!err) {
+        res.send("Successfully updated article!");
+      } else {
+        res.send(err);
+      }
+    }
+  );
+})
+
+.delete(function(req, res){
+  Article.deleteOne({title: req.params.articleTitle},function(err) {
+      if (!err) {
+        res.send("Successfully deleted the corresponding article!");
+      } else {
+        res.send(err);
+      }
+    }
+  );
 });
 
 
